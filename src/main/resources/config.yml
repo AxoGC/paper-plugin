@@ -1,0 +1,35 @@
+# Platform integration config.
+# Edit and run `/paperplatform reload` (not yet wired) or restart the server.
+
+# Base URL of the platform core (e.g. https://platform.example.com).
+# The plugin appends /api/srv/* paths automatically.
+base_url: "http://localhost:8080"
+
+# Server token issued by the platform admin panel (plaintext, returned only once on create/reset).
+# Sent as ?token=<token> on every request, per protocol §4.1.
+token: "REPLACE_ME"
+
+# Long-poll request timeout. Must be > server-side hang time (28s) + buffer.
+# Plan §4.6 recommends 35s on the game side.
+poll_timeout_ms: 35000
+
+# Connect timeout for all requests.
+connect_timeout_ms: 5000
+
+# Read timeout for non-poll requests.
+request_timeout_ms: 10000
+
+# Heartbeat cadence in ticks (20 ticks = 1s). Plan §15.1 says every 30s.
+heartbeat_ticks: 600
+
+# Leaderboard recompute cadence in ticks. Plan §10.2 says every 5 min.
+leaderboard_ticks: 6000
+
+# Web URL shown by /web (defaults to base_url when blank).
+web_url: ""
+
+# Documentation root for /docs (filesystem path inside the plugin data folder).
+docs_dir: "docs"
+
+# Whether to show the welcome banner on player join (plan §15.2 亮点功能).
+welcome_banner: true

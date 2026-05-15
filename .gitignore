@@ -1,0 +1,21 @@
+# Gradle
+.gradle/
+build/
+out/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# OS
+.DS_Store
+
+# Plugin data dir (contains runtime config with token)
+run/
