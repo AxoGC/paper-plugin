@@ -1,6 +1,6 @@
-package com.axogc.paper.transport
+package net.axogc.paper.transport
 
-import com.axogc.paper.config.PluginConfig
+import net.axogc.paper.config.PluginConfig
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject

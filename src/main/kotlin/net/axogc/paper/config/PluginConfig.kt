@@ -1,4 +1,4 @@
-package com.axogc.paper.config
+package net.axogc.paper.config
 
 import org.bukkit.configuration.file.FileConfiguration
 

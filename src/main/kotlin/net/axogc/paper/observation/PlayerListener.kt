@@ -1,7 +1,7 @@
-package com.axogc.paper.observation
+package net.axogc.paper.observation
 
-import com.axogc.paper.config.PluginConfig
-import com.axogc.paper.transport.ApiClient
+import net.axogc.paper.config.PluginConfig
+import net.axogc.paper.transport.ApiClient
 import com.google.gson.JsonObject
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -43,9 +43,9 @@ class PlayerListener(
             )
             player.sendMessage(
                 Component.text("输入 ", NamedTextColor.GRAY)
-                    .append(Component.text("/docs", NamedTextColor.GOLD))
+                    .append(Component.text("/axo docs", NamedTextColor.GOLD))
                     .append(Component.text(" 查看文档，", NamedTextColor.GRAY))
-                    .append(Component.text("/bind <CODE>", NamedTextColor.GOLD))
+                    .append(Component.text("/axo bind <CODE>", NamedTextColor.GOLD))
                     .append(Component.text(" 绑定账号。", NamedTextColor.GRAY))
             )
         }

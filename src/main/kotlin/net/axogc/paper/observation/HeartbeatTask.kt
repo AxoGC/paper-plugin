@@ -1,6 +1,6 @@
-package com.axogc.paper.observation
+package net.axogc.paper.observation
 
-import com.axogc.paper.transport.ApiClient
+import net.axogc.paper.transport.ApiClient
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import org.bukkit.Bukkit
@@ -17,7 +17,7 @@ class HeartbeatTask(private val api: ApiClient) : Runnable {
     override fun run() {
         val online = Bukkit.getOnlinePlayers()
         val players = JsonArray()
-        for (p in online) p.name?.let { players.add(it) }
+        for (p in online) players.add(p.name)
 
         val body = JsonObject().apply {
             addProperty("online", online.size)

@@ -1,6 +1,6 @@
-package com.axogc.paper.commands
+package net.axogc.paper.commands
 
-import com.axogc.paper.transport.ApiClient
+import net.axogc.paper.transport.ApiClient
 import com.google.gson.JsonObject
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * `/bind <CODE>` — sends POST /api/srv/binding.request (plan §9).
+ * `/axo bind <CODE>` — sends POST /api/srv/binding.request (plan §9).
  *
  * Server-side will:
  *  - validate the code (5min TTL, one-time)
@@ -40,7 +40,7 @@ class BindCommand(
             return true
         }
         if (args.isEmpty()) {
-            sender.sendMessage(Component.text("用法: /bind <验证码>", NamedTextColor.YELLOW))
+            sender.sendMessage(Component.text("用法: /axo bind <验证码>", NamedTextColor.YELLOW))
             return true
         }
         val now = System.currentTimeMillis()

@@ -1,11 +1,12 @@
-package com.axogc.paper.handlers
+package net.axogc.paper.handlers
 
-import com.axogc.paper.stats.StatsCollector
-import com.axogc.paper.transport.ApiClient
-import com.axogc.paper.transport.IncomingEvent
-import com.axogc.paper.transport.ReplyBody
+import net.axogc.paper.stats.StatsCollector
+import net.axogc.paper.transport.ApiClient
+import net.axogc.paper.transport.IncomingEvent
+import net.axogc.paper.transport.ReplyBody
 import com.google.gson.JsonObject
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.plugin.Plugin
@@ -38,6 +39,7 @@ class CommandRouter(
             "player.whitelist.remove" -> handleWhitelistRemove(event)
             "player.stats.fetch"      -> handleStatsFetch(event)
             "server.broadcast"        -> handleBroadcast(event)
+            "chat.from_web"           -> handleChatFromWeb(event)
             else -> {
                 log.warning("[platform] unknown command: ${event.command}")
                 api.reply(ReplyBody.fail(event.id, "COMMAND_UNKNOWN"))
@@ -67,6 +69,24 @@ class CommandRouter(
         val msg = e.data.stringOrNull("message") ?: return
         runSync {
             Bukkit.getServer().sendMessage(Component.text(msg))
+        }
+    }
+
+    /**
+     * `chat.from_web` (fire-and-forget): a web user posted in this server's
+     * channel. Broadcast `[Web] <sender> <content>` in-game without re-emitting
+     * upstream (avoids feedback loop).
+     */
+    private fun handleChatFromWeb(e: IncomingEvent) {
+        val sender = e.data.stringOrNull("sender") ?: return
+        val content = e.data.stringOrNull("content") ?: return
+        if (sender.isBlank() || content.isBlank()) return
+        val line = Component.text("[Web] ", NamedTextColor.AQUA)
+            .append(Component.text(sender, NamedTextColor.GOLD))
+            .append(Component.text(" ", NamedTextColor.GRAY))
+            .append(Component.text(content, NamedTextColor.WHITE))
+        runSync {
+            Bukkit.getServer().sendMessage(line)
         }
     }
 

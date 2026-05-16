@@ -1,4 +1,4 @@
-package com.axogc.paper.transport
+package net.axogc.paper.transport
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject

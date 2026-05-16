@@ -1,6 +1,6 @@
-package com.axogc.paper.commands
+package net.axogc.paper.commands
 
-import com.axogc.paper.config.PluginConfig
+import net.axogc.paper.config.PluginConfig
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.format.NamedTextColor
@@ -12,7 +12,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 /**
- * `/docs [path]` — browse markdown docs stored under the plugin data folder (plan §15.2).
+ * `/axo docs [path]` — browse markdown docs stored under the plugin data folder (plan §15.2).
  *
  * Layout (filesystem-backed): `<plugin-data>/<docs_dir>/...`.
  * The command lists subdirectories and previews leaf .md files inline.
@@ -58,14 +58,14 @@ class DocsCommand(
                 val rel = root.relativize(e).toString().replace('\\', '/')
                 sender.sendMessage(
                     Component.text("▸ $name/", NamedTextColor.AQUA)
-                        .clickEvent(ClickEvent.runCommand("/docs $rel"))
+                        .clickEvent(ClickEvent.runCommand("/axo docs $rel"))
                 )
             } else if (name.endsWith(".md")) {
                 val rel = root.relativize(e).toString().replace('\\', '/')
                 val display = name.removeSuffix(".md")
                 sender.sendMessage(
                     Component.text("• $display", NamedTextColor.WHITE)
-                        .clickEvent(ClickEvent.runCommand("/docs $rel"))
+                        .clickEvent(ClickEvent.runCommand("/axo docs $rel"))
                 )
             }
         }

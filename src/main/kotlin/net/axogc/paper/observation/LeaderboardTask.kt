@@ -1,7 +1,7 @@
-package com.axogc.paper.observation
+package net.axogc.paper.observation
 
-import com.axogc.paper.stats.StatsCollector
-import com.axogc.paper.transport.ApiClient
+import net.axogc.paper.stats.StatsCollector
+import net.axogc.paper.transport.ApiClient
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 

@@ -1,4 +1,4 @@
-package com.axogc.paper.transport
+package net.axogc.paper.transport
 
 import java.util.logging.Logger
 import java.util.concurrent.atomic.AtomicBoolean

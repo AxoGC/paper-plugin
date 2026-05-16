@@ -1,15 +1,17 @@
-package com.axogc.paper
+package net.axogc.paper
 
-import com.axogc.paper.commands.BindCommand
-import com.axogc.paper.commands.DocsCommand
-import com.axogc.paper.commands.WebCommand
-import com.axogc.paper.config.PluginConfig
-import com.axogc.paper.handlers.CommandRouter
-import com.axogc.paper.observation.HeartbeatTask
-import com.axogc.paper.observation.LeaderboardTask
-import com.axogc.paper.observation.PlayerListener
-import com.axogc.paper.transport.ApiClient
-import com.axogc.paper.transport.PollLoop
+import net.axogc.paper.commands.AxoCommand
+import net.axogc.paper.commands.BindCommand
+import net.axogc.paper.commands.DocsCommand
+import net.axogc.paper.commands.WebCommand
+import net.axogc.paper.config.PluginConfig
+import net.axogc.paper.handlers.CommandRouter
+import net.axogc.paper.observation.ChatBridgeListener
+import net.axogc.paper.observation.HeartbeatTask
+import net.axogc.paper.observation.LeaderboardTask
+import net.axogc.paper.observation.PlayerListener
+import net.axogc.paper.transport.ApiClient
+import net.axogc.paper.transport.PollLoop
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitTask
 
@@ -55,11 +57,19 @@ class PaperPlatformPlugin : JavaPlugin() {
 
         // Listeners
         server.pluginManager.registerEvents(PlayerListener(this, api, cfg), this)
+        server.pluginManager.registerEvents(ChatBridgeListener(this, api), this)
 
-        // Commands (declared in paper-plugin.yml)
-        getCommand("bind")?.setExecutor(BindCommand(this, api))
-        getCommand("web")?.setExecutor(WebCommand(cfg))
-        getCommand("docs")?.setExecutor(DocsCommand(this, cfg))
+        // Commands — every subcommand lives under /axo to avoid colliding with
+        // /bind, /web, /docs that other plugins may already own.
+        val axo = AxoCommand(
+            bind = BindCommand(this, api),
+            web = WebCommand(cfg),
+            docs = DocsCommand(this, cfg),
+        )
+        getCommand("axo")?.let {
+            it.setExecutor(axo)
+            it.tabCompleter = axo
+        }
 
         // Async periodic tasks — first tick = 1 (don't fire at tick 0 before world is ready)
         heartbeatTask = server.scheduler.runTaskTimerAsynchronously(

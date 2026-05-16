@@ -1,6 +1,6 @@
-package com.axogc.paper.commands
+package net.axogc.paper.commands
 
-import com.axogc.paper.config.PluginConfig
+import net.axogc.paper.config.PluginConfig
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.format.NamedTextColor
@@ -9,7 +9,7 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 
-/** `/web` — show a clickable platform URL (plan §15.2 亮点功能). */
+/** `/axo web` — show a clickable platform URL (plan §15.2 亮点功能). */
 class WebCommand(private val cfg: PluginConfig) : CommandExecutor {
     override fun onCommand(sender: CommandSender, cmd: Command, label: String, args: Array<out String>): Boolean {
         val url = cfg.webUrl.ifBlank { cfg.baseUrl }

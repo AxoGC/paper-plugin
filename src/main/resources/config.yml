@@ -25,10 +25,10 @@ heartbeat_ticks: 600
 # Leaderboard recompute cadence in ticks. Plan §10.2 says every 5 min.
 leaderboard_ticks: 6000
 
-# Web URL shown by /web (defaults to base_url when blank).
+# Web URL shown by /axo web (defaults to base_url when blank).
 web_url: ""
 
-# Documentation root for /docs (filesystem path inside the plugin data folder).
+# Documentation root for /axo docs (filesystem path inside the plugin data folder).
 docs_dir: "docs"
 
 # Whether to show the welcome banner on player join (plan §15.2 亮点功能).

@@ -1,4 +1,4 @@
-package com.axogc.paper.stats
+package net.axogc.paper.stats
 
 import com.google.gson.JsonObject
 import org.bukkit.Bukkit
@@ -73,7 +73,7 @@ object StatsCollector {
         val seen = HashSet<String>()
         val result = ArrayList<Pair<String, Double>>()
         for (p in Bukkit.getOnlinePlayers()) {
-            val n = p.name ?: continue
+            val n = p.name
             if (seen.add(n)) result += n to readMetric(p, metric)
         }
         for (p in Bukkit.getOfflinePlayers()) {
