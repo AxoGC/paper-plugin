@@ -31,6 +31,8 @@ class CommandRouter(
     private val api: ApiClient,
     private val log: Logger,
 ) {
+    private val adminCommand = AdminCommandHandler(plugin, api, log)
+
     fun dispatch(event: IncomingEvent) {
         when (event.command) {
             "player.kick"             -> handleKick(event)
@@ -40,6 +42,7 @@ class CommandRouter(
             "player.stats.fetch"      -> handleStatsFetch(event)
             "server.broadcast"        -> handleBroadcast(event)
             "chat.from_web"           -> handleChatFromWeb(event)
+            "admin.command.run"       -> adminCommand.handle(event)
             else -> {
                 log.warning("[platform] unknown command: ${event.command}")
                 api.reply(ReplyBody.fail(event.id, "COMMAND_UNKNOWN"))
@@ -128,8 +131,8 @@ class CommandRouter(
             api.reply(ReplyBody.fail(e.id, "PLAYER_NOT_FOUND"))
             return
         }
-        val stats = StatsCollector.read(op)
-        val payload = JsonObject().apply { add("stats", stats) }
+        val axes = StatsCollector.computeAxesJson(op)
+        val payload = JsonObject().apply { add("stats", axes) }
         api.reply(ReplyBody.ok(e.id, payload))
     }
 
