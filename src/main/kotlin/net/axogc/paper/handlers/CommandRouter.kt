@@ -1,9 +1,11 @@
 package net.axogc.paper.handlers
 
+import net.axogc.paper.observation.LeaderboardSnapshot
 import net.axogc.paper.stats.StatsCollector
 import net.axogc.paper.transport.ApiClient
 import net.axogc.paper.transport.IncomingEvent
 import net.axogc.paper.transport.ReplyBody
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -40,6 +42,8 @@ class CommandRouter(
             "player.whitelist.add"    -> handleWhitelistAdd(event)
             "player.whitelist.remove" -> handleWhitelistRemove(event)
             "player.stats.fetch"      -> handleStatsFetch(event)
+            "metrics.list"            -> handleMetricsList(event)
+            "leaderboard.fetch"       -> handleLeaderboardFetch(event)
             "server.broadcast"        -> handleBroadcast(event)
             "chat.from_web"           -> handleChatFromWeb(event)
             "admin.command.run"       -> adminCommand.handle(event)
@@ -117,6 +121,38 @@ class CommandRouter(
             if (was) op.isWhitelisted = false
             JsonObject().apply { addProperty("removed", was) }
         }.thenAccept { data -> api.reply(ReplyBody.ok(e.id, data)) }
+    }
+
+    /**
+     * `metrics.list`: return our static axis-metadata table verbatim. core
+     * caches the response for ~1h, so this should run in microseconds.
+     */
+    private fun handleMetricsList(e: IncomingEvent) {
+        val payload = JsonObject().apply { add("metrics", StatsCollector.metricsPayload()) }
+        api.reply(ReplyBody.ok(e.id, payload))
+    }
+
+    /**
+     * `leaderboard.fetch`: slice the in-memory [LeaderboardSnapshot] for one
+     * metric. Snapshot is rebuilt by the async LeaderboardTask on the plugin's
+     * own cadence; here we just slice — sub-millisecond.
+     */
+    private fun handleLeaderboardFetch(e: IncomingEvent) {
+        val metric = e.data.stringOrNull("metric") ?: run {
+            api.reply(ReplyBody.fail(e.id, "REQUEST_INVALID"))
+            return
+        }
+        val limit = (e.data.get("limit")?.takeIf { !it.isJsonNull }?.asInt ?: 50)
+            .coerceIn(1, 200)
+        val arr = JsonArray()
+        for (entry in LeaderboardSnapshot.slice(metric, limit)) {
+            arr.add(JsonObject().apply {
+                addProperty("name", entry.name)
+                addProperty("score", entry.score)
+            })
+        }
+        val payload = JsonObject().apply { add("entries", arr) }
+        api.reply(ReplyBody.ok(e.id, payload))
     }
 
     private fun handleStatsFetch(e: IncomingEvent) {

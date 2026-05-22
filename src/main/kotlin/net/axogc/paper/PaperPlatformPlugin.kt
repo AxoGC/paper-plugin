@@ -75,8 +75,12 @@ class PaperPlatformPlugin : JavaPlugin() {
         heartbeatTask = server.scheduler.runTaskTimerAsynchronously(
             this, HeartbeatTask(api), 1L, cfg.heartbeatTicks
         )
+        // Pull-mode leaderboard (PLAN §10.6): keep rebuilding the in-memory
+        // snapshot here; core slices via `leaderboard.fetch`. First rebuild
+        // runs after a short warm-up so an early `leaderboard.fetch` doesn't
+        // return empty for the full leaderboard_ticks period.
         leaderboardTask = server.scheduler.runTaskTimerAsynchronously(
-            this, LeaderboardTask(api), cfg.leaderboardTicks, cfg.leaderboardTicks
+            this, LeaderboardTask(), 200L, cfg.leaderboardTicks
         )
 
         logger.info("[platform] enabled — base=${cfg.baseUrl}, heartbeat=${cfg.heartbeatTicks}t, leaderboard=${cfg.leaderboardTicks}t")
